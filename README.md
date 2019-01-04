@@ -1,5 +1,9 @@
 # jot
 
+A simple progressive web app for taking notes. Powered by Vue.js.
+
+
+
 ## Project setup
 ```
 npm install
