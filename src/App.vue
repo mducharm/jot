@@ -1,22 +1,27 @@
 <template>
   <div id="app">
     <div class="container">
-    <MainMenu
-      :notes="noteData"
-      :activeNote="activeNote"
-      @addNote="createNote($event)"
-      @deleteNote="deleteNote($event)"
-      @noteSelected="setNote($event)"
-      @settings="showSettings = true"
-      v-show="!showSettings && activeNote === -1"
-    />
-    <Note
-      @back="activeNote = -1"
-      v-show="activeNote !== -1 && !showSettings"
-      :activeNote="activeNote"
-      :noteData="noteData"
-    />
-    <Settings v-show="showSettings" @back="showSettings = false"/>
+      <MainMenu
+        :notes="noteData"
+        :activeNote="activeNote"
+        @addNote="createNote($event)"
+        @deleteNote="deleteNote($event)"
+        @noteSelected="setNote($event)"
+        @settings="showSettings = true"
+        v-show="!showSettings && activeNote === -1"
+      />
+      <Note
+        @back="activeNote = -1"
+        v-show="activeNote !== -1 && !showSettings"
+        :activeNote="activeNote"
+        :noteData="noteData"
+      />
+      <Settings
+        v-show="showSettings"
+        @back="showSettings = false"
+        @export="exportNotes"
+        @deleteAll="deleteAll"
+      />
     </div>
   </div>
 </template>
@@ -40,8 +45,9 @@ export default {
       showSettings: false,
       noteData: [
         {
-          title: "Test Note",
-          content: "Test note content."
+          title: "Welcome to Jot",
+          content:
+            "Notes are saved automatically, so simply start typing. You can add or delete notes from the main menu options.\n\nUnder Settings, you can also export your notes into a .txt or delete all your notes at once.\n\n For more information, go to https://github.com/mducharm/jot"
         }
       ]
     };
@@ -59,6 +65,25 @@ export default {
     },
     setNote(note) {
       this.activeNote = note;
+    },
+    exportNotes() {
+      // var dataStr = "data:text/txt; charset=utf-8," + encodeURIComponent(JSON.stringify(this.noteData));
+      var dataStr = "data:text/plain; charset=utf-8,";
+      this.noteData.forEach(
+        x =>
+          (dataStr += encodeURIComponent(
+            x.title + "\r\n" + x.content + "\r\n\r\n"
+          ))
+      );
+      var downloadAnchorNode = document.createElement("a");
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "notes.txt");
+      document.body.appendChild(downloadAnchorNode);
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    },
+    deleteAll() {
+      this.noteData = [];
     }
   }
 };

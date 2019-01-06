@@ -5,7 +5,10 @@
         <!-- <i class="material-icons md-light">edit</i> -->
         <h2 class="logo-text">jot</h2>
       </button>
-      <button @click="$emit('settings')" class="btn btn-light settingsBtn">
+      <button
+        @click="$emit('settings'); adding = false; deleting = false;"
+        class="btn btn-light settingsBtn"
+      >
         <i class="material-icons">build</i>
       </button>
       <button @click="toggleDeleting" class="btn btn-light deleteBtn">
@@ -14,20 +17,26 @@
       <button @click="toggleAdding" class="btn btn-light addBtn">
         <i class="material-icons">add</i>
       </button>
-      <input
-        class="addTextBox"
-        v-show="adding"
-        @keyup.enter="$emit('addNote', inputText); inputText = ''"
-        v-model="inputText"
-      >
+      <div v-show="adding" class="addTextBox">
+        <input class="addBoxInput" @keyup.enter="$emit('addNote', inputText); inputText = ''" v-model="inputText">
+        <button class="btn addBoxAdd" @click="$emit('addNote', inputText); inputText = ''">
+          <i class="material-icons">add</i>
+        </button>
+      </div>
     </div>
     <ul>
-      <li v-for="(note, index) in notes" :key="note" @click="updateActiveNote(index)">
+      <li
+        v-for="(note, index) in notes"
+        :key="note"
+        @click="updateActiveNote(index); adding = false; deleting = false;"
+        class="note_li"
+      >
+        <i class="material-icons">edit</i>
         {{note.title}}
         <button
           v-show="deleting"
           @click.stop="$emit('deleteNote', index)"
-          class="btn btn-danger"
+          class="btn delLiBtn"
         >
           <i class="material-icons">clear</i>
         </button>
@@ -103,11 +112,13 @@ export default {
   border: solid 0.5px #c2c2c2;
   border-radius: 5px;
   padding: 10px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logo-text {
-  font-family: 'Pacifico', cursive;
+  font-family: "Pacifico", cursive;
   float: right;
   color: white;
 }
@@ -130,9 +141,23 @@ export default {
 
 .addTextBox {
   grid-area: addBox;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
   margin-top: 5%;
+}
+
+.addBoxInput {
+  text-align: center;
   padding: 10px 10px 10px 10px;
+}
+
+.addBoxAdd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0, 155, 0);
+  color: white;
 }
 
 ul {
@@ -147,6 +172,21 @@ li {
   border: solid 0.5px #c2c2c2;
   border-radius: 5px;
   width: 100%;
-  font-family: 'Asap', sans-serif;
+  font-family: "Asap", sans-serif;
+}
+
+.note_li {
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  align-items: center;
+}
+
+.delLiBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+   background:rgb(247, 64, 64);
+  color: white;
 }
 </style>
