@@ -6,14 +6,14 @@
       type="text"
       class="title"
       :value="noteData[activeNote].title"
-      @input="noteData[activeNote].title = $event.target.value"
+      @input="noteData[activeNote].title = $event.target.value; $emit('update')"
     >
     <textarea
       class="note"
       cols="30"
       rows="15"
       :value="noteData[activeNote].content"
-      @input="noteData[activeNote].content = $event.target.value"
+      @input="noteData[activeNote].content = $event.target.value; $emit('update')"
     ></textarea>
   </div>
 </template>

@@ -4,14 +4,15 @@
       <MainMenu
         :notes="noteData"
         :activeNote="activeNote"
-        @addNote="createNote($event)"
-        @deleteNote="deleteNote($event)"
+        @addNote="createNote($event); save()"
+        @deleteNote="deleteNote($event); save()"
         @noteSelected="setNote($event)"
         @settings="showSettings = true"
         v-show="!showSettings && activeNote === -1"
       />
       <Note
         @back="activeNote = -1"
+        @update="save()"
         v-show="activeNote !== -1 && !showSettings"
         :activeNote="activeNote"
         :noteData="noteData"
@@ -52,11 +53,16 @@ export default {
       ]
     };
   },
+  mounted () {
+    if (localStorage.getItem("noteData")) {
+      this.noteData = JSON.parse(localStorage.getItem("noteData"))
+    }
+  },
   methods: {
     createNote(t) {
       var note = {
         title: t,
-        content: "Content test"
+        content: ""
       };
       this.$set(this.noteData, this.noteData.length, note);
     },
@@ -84,6 +90,9 @@ export default {
     },
     deleteAll() {
       this.noteData = [];
+    },
+    save() {
+      localStorage.setItem("noteData", JSON.stringify(this.noteData))
     }
   }
 };
