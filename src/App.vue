@@ -21,7 +21,7 @@
         v-show="showSettings"
         @back="showSettings = false"
         @export="exportNotes"
-        @deleteAll="deleteAll"
+        @deleteAll="deleteAll(); save()"
       />
     </div>
   </div>
